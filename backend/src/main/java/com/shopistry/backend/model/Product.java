@@ -1,5 +1,7 @@
 package com.shopistry.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class Product {
     private String brand;
     private BigDecimal price;
     private String category;
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
     private Date releaseDate;
     private boolean available;
     private int quantity;
