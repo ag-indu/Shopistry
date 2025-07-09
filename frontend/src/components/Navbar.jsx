@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,9 +28,9 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex gap-6 items-center">
-            <a href="#" className="text-gray-700 hover:text-blue-500">Home</a>
-            <a href="#" className="text-gray-700 hover:text-blue-500">Add Product</a>
-            <a href="#" className="text-gray-700 hover:text-blue-500">Cart</a>
+            <Link to="/" className="text-gray-700 hover:text-blue-500">Home</Link>
+            <Link to="/add-product" className="text-gray-700 hover:text-blue-500">Add Product</Link>
+            <Link to="/cart" className="text-gray-700 hover:text-blue-500">Cart</Link>
           </div>
 
           {/* Mobile Hamburger */}
@@ -44,9 +45,9 @@ export default function Navbar() {
       {/* Mobile Nav */}
       {isOpen && (
         <div className="md:hidden bg-white px-4 pb-4 space-y-2">
-          <a href="#" className="block text-gray-700 hover:text-blue-500">Home</a>
-          <a href="#" className="block text-gray-700 hover:text-blue-500">Shop</a>
-          <a href="#" className="block text-gray-700 hover:text-blue-500">Contact</a>
+            <Link to="/" className="text-gray-700 hover:text-blue-500">Home</Link>
+            <Link to="/add-product" className="text-gray-700 hover:text-blue-500">Add Product</Link>
+            <Link to="/cart" className="text-gray-700 hover:text-blue-500">Cart</Link>
         </div>
       )}
     </nav>
