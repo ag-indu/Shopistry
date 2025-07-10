@@ -4,9 +4,13 @@ A full-stack e-commerce web application built with **React**, **Spring Boot**, a
 
 ---
 
-![Homepage](./screenshots/screenshot1.png)
-![Homepage](./screenshots/screenshot2.png)
-![Homepage](./screenshots/screenshot3.png)
+<div align="center">
+  <img src="./screenshots/screenshot1.png" alt="Homepage Screenshot 1" width="300" style="margin-right: 10px;" />
+  <img src="./screenshots/screenshot2.png" alt="Homepage Screenshot 2" width="300" style="margin: 0 10px;" />
+  <img src="./screenshots/screenshot3.png" alt="Homepage Screenshot 3" width="300" style="margin-left: 10px;" />
+</div>
+
+---
 
 ## Tech Stack
 
