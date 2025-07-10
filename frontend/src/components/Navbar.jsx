@@ -29,7 +29,7 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex gap-6 items-center">
             <Link to="/" className="text-gray-700 hover:text-blue-500">Home</Link>
-            <Link to="/add-product" className="text-gray-700 hover:text-blue-500">Add Product</Link>
+            <Link to="/add_product" className="text-gray-700 hover:text-blue-500">Add Product</Link>
             <Link to="/cart" className="text-gray-700 hover:text-blue-500">Cart</Link>
           </div>
 

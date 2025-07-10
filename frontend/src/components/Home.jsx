@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../Context/Context";
 
-const Home = () => {
-  const { data, isError, refreshData } = useContext(AppContext);
+const Home = ({ selectedCategory }) => {
+  const { data, isError, addToCart, refreshData } = useContext(AppContext);
   const [products, setProducts] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
 
@@ -17,58 +17,107 @@ const Home = () => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get("http://localhost:8080/api/products");
-          setProducts(response.data);
-          console.log(response.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+      const fetchImagesAndUpdateProducts = async () => {
+        const updatedProducts = await Promise.all(
+          data.map(async (product) => {
+            try {
+              const response = await axios.get(
+                `http://localhost:8080/api/product/${product.id}/image`,
+                { responseType: "blob" }
+              );
+              const imageUrl = URL.createObjectURL(response.data);
+              return { ...product, imageUrl };
+            } catch (error) {
+              console.error("Error fetching image for product ID:", product.id, error);
+              return { ...product, imageUrl: "/placeholder.jpg" };
+            }
+          })
+        );
+        setProducts(updatedProducts);
       };
-      fetchData();
+
+      fetchImagesAndUpdateProducts();
     }
   }, [data]);
 
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.category === selectedCategory)
+    : products;
+
   if (isError) {
     return (
-      <h2 className="text-center text-xl font-semibold mt-40">
+      <h2 className="text-center py-40 text-xl font-semibold text-red-600">
         Something went wrong...
       </h2>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pt-24 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-    {products.map((product) => (
-        <Link
-          key={product.id}
-          to={`/product/${product.id}`}
-          className="block bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 p-4 min-h-72"
-        >
-          <div className="flex flex-col justify-between h-full">
-            <div>
-              <h5 className="text-lg font-bold text-gray-800 mb-1">
-                {product.name.toUpperCase()}
-              </h5>
-              <span className="text-sm text-gray-500 italic">
-                by {product.brand}
-              </span>
-            </div>
-            <div className="mt-4">
-              <h5 className="text-xl font-semibold text-green-600">
-                ₹{product.price}
-              </h5>
-              <button
-                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition"
-                onClick={(e) => e.preventDefault()}
+    <div className="pt-24 px-6"> {/* 🟡 Space from top to avoid navbar overlap */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {filteredProducts.length === 0 ? (
+          <h2 className="col-span-full text-center text-gray-600 text-xl">
+            No Products Available
+          </h2>
+        ) : (
+          filteredProducts.map((product) => {
+            const { id, brand, name, price, productAvailable, imageUrl } = product;
+
+            return (
+              <div
+                key={id}
+                className={`relative flex flex-col rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-[1.02] ${
+                  productAvailable ? "bg-white" : "bg-gray-200"
+                }`}
               >
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </Link>
-      ))}
+                <Link to={`/product/${id}`} className="h-full flex flex-col">
+                  {/* Image container with fixed ratio */}
+                  <div className="relative w-full pt-[56.25%] bg-gray-100 overflow-hidden">
+                    <img
+                      src={imageUrl}
+                      alt={name}
+                      className="absolute top-0 left-0 w-full h-full object-cover"
+                    />
+                    {/* Heart Button */}
+                    <div className="absolute top-3 right-3 z-10 text-gray-600 hover:text-red-500 cursor-pointer">
+                      <i className="bi bi-heart text-xl"></i>
+                    </div>
+                  </div>
+
+                  <div className="flex-grow p-4 flex flex-col justify-between">
+                    <div>
+                      <h5 className="text-lg font-semibold text-gray-800 mb-1">
+                        {name.toUpperCase()}
+                      </h5>
+                      <p className="text-sm italic text-gray-500">~ {brand}</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <p className="text-lg font-bold text-green-700 mb-2">
+                        ₹ {price}
+                      </p>
+                      <button
+                        className={`w-full py-2 px-4 text-white rounded-md text-sm font-medium transition ${
+                          productAvailable
+                            ? "bg-blue-600 hover:bg-blue-700"
+                            : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product);
+                        }}
+                        disabled={!productAvailable}
+                      >
+                        {productAvailable ? "Add to Cart" : "Out of Stock"}
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            );
+          })
+        )}
+      </div>
     </div>
   );
 };

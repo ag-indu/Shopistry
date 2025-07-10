@@ -1,4 +1,4 @@
-INSERT INTO product (id, name, desc, brand, price, category, release_date, available, quantity) VALUES
+INSERT INTO product (id, name, description, brand, price, category, release_date, product_available, stock_quantity) VALUES
 (1, 'Wireless Mouse', 'Ergonomic wireless mouse with long battery life', 'Logitech', 1299.00, 'Electronics', '2023-06-15', true, 50),
 (2, 'Yoga Mat', 'Non-slip mat for all types of workouts', 'FitFlex', 699.00, 'Fitness', '2022-11-01', true, 120),
 (3, 'Bluetooth Speaker', 'Portable speaker with surround sound', 'Boat', 2499.99, 'Electronics', '2023-03-10', true, 30),
